@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import one.digitalinnovation.beerstock.dto.BeerDTO;
 import one.digitalinnovation.beerstock.dto.QuantityDTO;
+import one.digitalinnovation.beerstock.entity.Beer;
 import one.digitalinnovation.beerstock.exception.BeerAlreadyRegisteredException;
 import one.digitalinnovation.beerstock.exception.BeerNotFoundException;
 import one.digitalinnovation.beerstock.exception.BeerStockExceededException;
@@ -44,4 +45,20 @@ public interface BeerControllerDocs {
             @ApiResponse(code = 404, message = "Beer with given id not found.")
     })
     void deleteById(@PathVariable Long id) throws BeerNotFoundException;
+
+    @ApiOperation(value = "Decrement beer's stock")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Success beer stock incremented"),
+            @ApiResponse(code = 404, message = "Beer with given id not found."),
+            @ApiResponse(code = 400, message = "Beers with increment informed exceeds the max stock capacity")
+    })
+    BeerDTO increment(@PathVariable Long id, @RequestBody @Valid QuantityDTO quantityDTO) throws BeerNotFoundException, BeerStockExceededException;
+
+    @ApiOperation(value = "Decrement beer's stock")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Success beer stock decremented"),
+            @ApiResponse(code = 404, message = "Beer with given id not found."),
+            @ApiResponse(code = 400, message = "Beers with decrement informed exceeds the min stock capacity")
+    })
+    BeerDTO decrement(@PathVariable Long id, @RequestBody @Valid QuantityDTO quantityDTO) throws BeerNotFoundException, BeerStockExceededException;
 }
